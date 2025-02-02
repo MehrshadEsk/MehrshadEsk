@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @MehrshadEsk (Mehrshad Eskandarpour)
+- 👋 Hi, I’m Mehrshad Eskandarpour (@MehrshadEsk)
 - 👀 I’m an eighth-semester undergraduate student in Electrical Engineering at Iran University of Science and Technology (IUST).
 - 😄 I’m specialized in Telecommunication Systems and Networks.
 - ✨ I’m currently conducting research on Physical Layer Security in 6G Networks.
