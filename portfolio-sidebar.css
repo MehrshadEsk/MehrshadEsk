@@ -1,0 +1,538 @@
+/* Minimal portfolio index. The pale blue is sampled from the reference. */
+.home-page {
+  --sidebar-width: 264px;
+  --content-gutter: clamp(28px, 3.5vw, 56px);
+  --sidebar-bg: #cbdff1;
+  --sidebar-ink: #203e55;
+  --sidebar-muted: #496173;
+  --sidebar-line: #a8c0d4;
+  --sidebar-accent: #315d80;
+  --sidebar-hover: #d6e6f4;
+  --sidebar-active: #e0ecf6;
+  --sidebar-ease: cubic-bezier(.22, 1, .36, 1);
+}
+.portfolio-content { margin-left: var(--sidebar-width); min-width: 0; }
+.home-page .container, .home-page .footer {
+  width: min(var(--width), calc(100% - var(--content-gutter) * 2));
+}
+.home-page main:focus { outline: none; }
+.home-page .skip { left: calc(var(--sidebar-width) + 16px); }
+.home-page section[id] { scroll-margin-top: 24px; }
+
+/* A single colour, fine dividers, and a restrained current-section state. */
+.portfolio-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-width);
+  height: 100vh;
+  height: 100dvh;
+  padding: 35px 26px 27px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-ink);
+  border-right: 1px solid var(--sidebar-line);
+  scrollbar-width: thin;
+  scrollbar-color: var(--sidebar-line) var(--sidebar-bg);
+  color-scheme: light;
+}
+.sidebar-brand-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; padding-bottom: 28px; border-bottom: 1px solid var(--sidebar-line); flex-shrink: 0; }
+.sidebar-brand { display: inline-flex; align-items: center; gap: 16px; }
+.sidebar-brand .mark { font-size: 42px; }
+.sidebar-brand .mark i { color: #c9492b; }
+.sidebar-brand:hover { color: var(--sidebar-accent); }
+.sidebar-edition { font-size: 9px; line-height: 1.7; letter-spacing: .15em; color: var(--sidebar-muted); }
+.sidebar-nav { margin-block: 38px 36px; flex-shrink: 0; }
+/* The selected section glides between links, instead of flashing on/off. */
+.sidebar-nav-list {
+  position: relative;
+  isolation: isolate;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar-nav-list::before,
+.sidebar-nav-list::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--active-height, 48px);
+  transform: translate3d(0, var(--active-y, 0px), 0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.sidebar-nav-list::before {
+  right: 0;
+  background: var(--sidebar-active);
+  box-shadow: 0 3px 15px rgb(32 62 85 / 4%);
+}
+.sidebar-nav-list::after {
+  width: 2px;
+  background: var(--sidebar-accent);
+}
+.sidebar-nav-list.has-moving-indicator::before,
+.sidebar-nav-list.has-moving-indicator::after { opacity: 1; }
+.sidebar-nav-list.indicator-animated::before,
+.sidebar-nav-list.indicator-animated::after {
+  transition: transform .6s cubic-bezier(.22, 1, .36, 1),
+              height .35s cubic-bezier(.22, 1, .36, 1),
+              opacity .2s ease;
+}
+.sidebar-nav-list li { margin: 0; padding: 0; }
+.sidebar-nav-list li + li { margin-top: 4px; }
+.sidebar-nav-link {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 48px;
+  padding: 12px 13px;
+  border-left: 2px solid transparent;
+  color: var(--sidebar-muted);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  transition: background-color .22s ease, color .3s ease, border-color .22s ease;
+}
+.sidebar-link-number {
+  flex-shrink: 0;
+  color: var(--sidebar-muted);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+  transition: color .3s ease, transform .5s var(--sidebar-ease);
+}
+.sidebar-nav-link:hover { background: var(--sidebar-hover); color: var(--sidebar-ink); }
+/* Fallback retains the active state even with JavaScript disabled. */
+.sidebar-nav-link[aria-current="location"] {
+  background: var(--sidebar-active);
+  border-left-color: var(--sidebar-accent);
+  color: var(--sidebar-ink);
+  font-weight: 500;
+}
+.sidebar-nav-list.has-moving-indicator .sidebar-nav-link[aria-current="location"] {
+  background: transparent;
+  border-left-color: transparent;
+}
+.sidebar-nav-list.has-moving-indicator .sidebar-nav-link:hover { background: transparent; }
+.sidebar-nav-list.has-moving-indicator .sidebar-nav-link:not([aria-current="location"]):hover {
+  background: rgb(255 255 255 / 20%);
+}
+.sidebar-nav-link[aria-current="location"] .sidebar-link-number {
+  color: var(--sidebar-accent);
+  transform: translateX(-2px);
+}
+.portfolio-sidebar a:focus-visible, .portfolio-sidebar button:focus-visible { outline: 2px solid var(--sidebar-accent); outline-offset: 4px; }
+.sidebar-bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--sidebar-line); flex-shrink: 0; }
+.sidebar-eyebrow { display: block; color: var(--sidebar-muted); font-size: 9px; font-weight: 500; line-height: 1.6; letter-spacing: .15em; text-transform: uppercase; }
+.sidebar-social { display: flex; flex-wrap: wrap; column-gap: 17px; row-gap: 4px; margin-top: 10px; }
+.sidebar-social a { display: inline-flex; align-items: center; gap: 4px; min-height: 36px; font-size: 10px; color: var(--sidebar-muted); }
+.sidebar-social a:hover { color: var(--sidebar-ink); }
+.sidebar-social span { font-size: 11px; }
+.sidebar-close, .sidebar-backdrop { display: none; }
+
+/* Theme selection belongs to the main page, above the hero. */
+.portfolio-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  /* Full-width top bar removes the unused strip beside the sidebar. */
+  width: 100%;
+  min-height: 80px;
+  margin-inline: 0;
+  padding-inline: clamp(16px, 1.8vw, 24px) var(--content-gutter);
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-context { display: flex; align-items: center; gap: 13px; min-width: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.topbar-kicker { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+.topbar-separator { color: var(--olive); opacity: .65; }
+.topbar-location { color: var(--ink); }
+.topbar-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
+.main-theme-toggle { position: relative; overflow: hidden; }
+.main-theme-toggle:hover { background: var(--surface); border-color: var(--olive); }
+.mobile-brand, .sidebar-toggle { display: none; }
+
+/* Preserve the portfolio content and its comfortable reading width. */
+.home-page .hero { padding-block: 48px 64px; }
+.home-page .hero-grid { grid-template-columns: minmax(0, 1fr) clamp(224px, 22vw, 320px); gap: clamp(28px, 3.5vw, 64px); }
+.home-page h1 { font-size: clamp(40px, 4.4vw, 72px); overflow-wrap: break-word; }
+.home-page .hero-portrait { width: 100%; }
+.home-page .hero-summary { text-align: left; hyphens: none; }
+.home-page .section-grid { grid-template-columns: 120px minmax(0, 1fr); gap: 32px; }
+.home-page .section-content { min-width: 0; }
+.home-page .hero-actions { gap: 20px; }
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .home-page { --sidebar-width: 248px; --content-gutter: 32px; }
+  .portfolio-sidebar { padding-inline: 22px; }
+  .home-page .section-grid { grid-template-columns: 94px minmax(0, 1fr); gap: 24px; }
+  .home-page .timeline-row, .home-page .education-card { grid-template-columns: 110px minmax(0, 1fr); gap: 24px; }
+  .home-page .contact-grid { flex-direction: column; gap: 24px; }
+  .home-page .research-intro { align-items: flex-start; flex-direction: column; gap: 20px; }
+  .home-page #research .research-card { padding: 20px; }
+  .home-page #research .research-card h3 { font-size: 21px; }
+}
+@media (max-height: 820px) {
+  .portfolio-sidebar { padding-block: 24px 20px; }
+  .sidebar-brand-row { padding-bottom: 22px; }
+  .sidebar-nav { margin-block: 28px 24px; }
+  .sidebar-nav-link { min-height: 44px; padding-block: 11px; }
+}
+@media (max-width: 1024px) {
+  .home-page { --content-gutter: 28px; --sidebar-width: 288px; }
+  .portfolio-content { margin-left: 0; }
+  .home-page .skip { left: 16px; }
+  .home-page section[id] { scroll-margin-top: 16px; }
+  .portfolio-topbar { width: 100%; min-height: 72px; padding: 12px var(--content-gutter); gap: 16px; }
+  .mobile-brand { display: inline-flex; align-items: center; }
+  .mobile-brand .mark { font-size: 34px; }
+  .topbar-context { gap: 9px; }
+  .topbar-kicker { display: none; }
+  .topbar-separator { display: none; }
+  .topbar-location { font-size: 11px; }
+  .sidebar-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 10px 13px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 11px; }
+  .sidebar-toggle svg, .sidebar-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .portfolio-sidebar { max-width: calc(100vw - 32px); padding-top: max(24px, env(safe-area-inset-top)); padding-bottom: max(24px, env(safe-area-inset-bottom)); visibility: hidden; transform: translateX(-100%); transition: transform .35s var(--sidebar-ease), visibility .35s; }
+  .sidebar-close { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; padding: 12px; border: 1px solid var(--sidebar-line); background: transparent; color: var(--sidebar-ink); }
+  .sidebar-close:hover { background: var(--sidebar-hover); }
+  .sidebar-nav { margin-block: 32px 28px; }
+  .sidebar-backdrop:not([hidden]) { position: fixed; inset: 0; z-index: 50; display: block; background: rgb(15 20 15 / 46%); }
+  .home-page[data-sidebar-open] { overflow: hidden; }
+  .home-page[data-sidebar-open] .portfolio-sidebar { visibility: visible; transform: translateX(0); }
+  .home-page .hero { padding-block: 40px 48px; }
+  .home-page h1 { font-size: clamp(40px, 5.8vw, 64px); }
+  .home-page .section-grid { grid-template-columns: 110px minmax(0, 1fr); gap: 24px; }
+  .no-js .portfolio-sidebar { position: static; width: 100%; max-width: none; height: auto; transform: none; visibility: visible; }
+  .no-js .sidebar-nav { margin-top: 28px; }
+  .no-js .sidebar-nav-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .no-js .sidebar-toggle, .no-js .sidebar-close { display: none; }
+}
+@media (max-width: 760px) {
+  .home-page { --content-gutter: 20px; }
+  .home-page .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .home-page h1 { font-size: clamp(36px, 8.8vw, 60px); }
+  .home-page .hero-profile { width: min(100%, 260px); max-width: 260px; }
+  .home-page .section-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .home-page .contact-grid { flex-direction: column; gap: 24px; }
+}
+@media (max-width: 420px) {
+  .portfolio-topbar { gap: 12px; }
+  .topbar-location { max-width: 112px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sidebar-toggle { padding-inline: 12px; }
+  .sidebar-toggle span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-sidebar, .portfolio-sidebar *, .portfolio-sidebar *::before,
+  .portfolio-sidebar *::after, .portfolio-topbar * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@media print {
+  .portfolio-sidebar, .portfolio-topbar, .sidebar-backdrop { display: none !important; }
+  .portfolio-content { margin-left: 0; }
+}
+
+/* Distinct, consistent chapters across the main portfolio. */
+.home-page {
+  --chapter-surface: #fffdf8;
+  --chapter-alternate: #edf3f8;
+  --chapter-border: #9eafbd;
+  --chapter-accent: #42677f;
+  --chapter-card: #fffdf8;
+}
+:root[data-theme="dark"] .home-page {
+  --chapter-surface: #30362e;
+  --chapter-alternate: #292f2b;
+  --chapter-border: #5a6c64;
+  --chapter-accent: #bed8e9;
+  --chapter-card: #343b32;
+}
+.home-page .panel,
+.home-page .contact {
+  position: relative;
+  padding-block: 88px;
+  border-top: 1px solid var(--chapter-border);
+  background: var(--chapter-surface);
+}
+.home-page #research,
+.home-page #publications,
+.home-page #education { background: var(--chapter-alternate); }
+/* No decorative heavy bar at the left edge of section dividers. */
+.home-page .panel .section-marker {
+  align-self: start;
+  padding-top: 14px;
+  border-top: 2px solid var(--chapter-border);
+  color: var(--chapter-accent);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .02em;
+}
+.home-page .panel .section-marker span {
+  margin-top: 12px;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: .09em;
+}
+.home-page .section-content > .section-title:first-child {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--chapter-border);
+  margin-bottom: 32px;
+}
+.home-page .experience-group + .experience-group {
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 2px solid var(--chapter-border);
+}
+
+/* Both degrees use the same complete card and field structure. */
+.home-page .education-card {
+  padding: 28px;
+  border: 1px solid var(--chapter-border);
+  background: var(--chapter-card);
+}
+.home-page .education-card + .education-card { margin-top: 24px; }
+.home-page .education-card .education-facts { gap: 20px 24px; margin-block: 24px; }
+.home-page .education-card .education-facts > div {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.home-page .education-card .thesis { padding-top: 18px; border-top: 1px solid var(--line); }
+.home-page .education-card .thesis p { margin-bottom: 0; }
+.home-page .academic-ref-link { margin-top: 32px; }
+.home-page .contact { padding-block: 72px; }
+
+@media (max-width: 760px) {
+  .home-page .panel { padding-block: 56px; }
+  .home-page .contact { padding-block: 48px; }
+  .home-page .panel .section-marker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 0 18px;
+    border-top: 0;
+    border-bottom: 1px solid var(--chapter-border);
+    font-size: 16px;
+  }
+  .home-page .panel .section-marker span { margin: 0; font-size: 11px; }
+  .home-page .section-content > .section-title:first-child { padding-bottom: 20px; margin-bottom: 28px; }
+  .home-page .experience-group + .experience-group { margin-top: 40px; padding-top: 28px; }
+  .home-page .education-card { padding: 22px; }
+  .home-page .education-card .education-head h2 { font-size: 22px; line-height: 1.3; }
+}
+
+
+/* 2026-10-21 portfolio refinements: only the requested homepage sections. */
+/* Research interests: all four cards in one desktop row, without summary paragraphs. */
+.home-page #research .research-cards {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.home-page #research .research-card {
+  padding: 14px;
+  min-width: 0;
+}
+.home-page #research .research-card-top { margin-bottom: 13px; }
+.home-page #research .research-preview { margin-bottom: 16px; }
+.home-page #research .research-card h3 {
+  font-size: clamp(15px, 1.35vw, 19px);
+  line-height: 1.37;
+  margin-bottom: 18px;
+}
+.home-page #research .card-arrow { padding-top: 10px; font-size: 11px; }
+
+/* Experience + teaching: readable descriptions on mouse hover, keyboard focus, or tap. */
+.home-page .timeline-row[tabindex], .home-page .teaching-card[tabindex] { cursor: default; }
+.home-page .timeline-row[tabindex]:focus-visible,
+.home-page .teaching-card[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.home-page .hover-description {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 300ms ease, opacity 230ms ease;
+}
+.home-page .hover-description > div { min-height: 0; overflow: hidden; }
+.home-page .hover-description p {
+  margin: 11px 0 0;
+}
+.home-page .timeline-row:hover .hover-description,
+.home-page .timeline-row:focus-within .hover-description,
+.home-page .teaching-card:hover .hover-description,
+.home-page .teaching-card:focus-within .hover-description {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* Publications no longer show R01/R02/R03/R04 classification tags. */
+.home-page #publications .pub-meta { margin-top: 3px; }
+
+/* Compact degree cards without deleting any original education details. */
+.home-page .education-card {
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 20px;
+  padding: 17px 20px;
+}
+.home-page .education-card + .education-card { margin-top: 12px; }
+.home-page .education-card .date { padding-top: 5px; }
+.home-page .education-card .education-head h2 {
+  font-size: 20px;
+  line-height: 1.35;
+  margin: 0 0 3px;
+}
+.home-page .education-card .education-head p { font-size: 12px; margin: 0; }
+.home-page .education-card .education-facts {
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 8px 22px;
+  margin-block: 12px;
+  font-size: 12px;
+}
+.home-page .education-card .education-facts > div { padding-top: 6px; gap: 2px; }
+.home-page .education-card .education-facts strong { line-height: 1.5; }
+.home-page .education-card .thesis { padding-top: 9px; font-size: 12px; line-height: 1.65; }
+.home-page .education-card .thesis > span { margin-bottom: 4px; }
+.home-page .education-card .thesis p { line-height: 1.65; }
+.home-page .education-recommendation-btn {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 15px;
+  padding: 9px 13px;
+  border: 1px solid var(--olive);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+.home-page .education-recommendation-btn:hover,
+.home-page .education-recommendation-btn:focus-visible {
+  border-color: var(--accent);
+  background: var(--bg);
+  color: var(--accent);
+}
+
+/* Smaller screens stay usable rather than forcing four tiny cards side-by-side. */
+@media (min-width: 820px) and (max-width: 1280px) {
+  .home-page #research .research-card { padding: 12px; }
+  .home-page #research .research-cards { gap: 10px; }
+  .home-page #research .research-card h3 { font-size: 16px; }
+}
+@media (max-width: 819px) {
+  .home-page #research .research-cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .home-page #research .research-card h3 { font-size: 18px; }
+  .home-page .education-card { grid-template-columns: 1fr; gap: 8px; padding: 15px; }
+}
+@media (max-width: 480px) {
+  .home-page #research .research-cards { grid-template-columns: minmax(0, 1fr); }
+  .home-page #research .research-card { padding: 18px; }
+  .home-page .education-card .education-facts { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page .hover-description { transition: none; }
+}
+
+
+/* 2026-10-21 Teaching/Mentoring refinement: one focused instructor entry. */
+.home-page #teaching .teaching-grid {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 860px;
+}
+.home-page #teaching .teaching-card { min-width: 0; }
+
+/* Keep the recommendation and teaching-assistantship actions together in the B.Sc. */
+.home-page .education-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+.home-page .education-actions .education-recommendation-btn { margin-top: 0; }
+
+/* 2026-10-22: clearer identity, compact appointments, and a complete contact close. */
+.home-page .hero-summary-role,
+.home-page .hero-summary-note { display: block; }
+.home-page .hero-summary-role { color: var(--ink); font-size: 17px; }
+.home-page .hero-summary-note { max-width: 430px; margin-top: 7px; font-size: 15px; line-height: 1.65; }
+.sidebar-page-arrow { display: inline-block; margin-left: 5px; font-size: 11px; opacity: .7; }
+
+.home-page #experience,
+.home-page #publications { padding-block: 56px; }
+.home-page #experience .experience-group > .section-title { margin-bottom: 19px; }
+.home-page #experience .experience-group h2,
+.home-page #publications .publications-title h2 { font-size: clamp(23px, 2.1vw, 28px); line-height: 1.25; margin: 0; }
+.home-page #experience .experience-group + .experience-group { margin-top: 32px; padding-top: 26px; border-top-width: 1px; }
+.home-page #experience .timeline-row { grid-template-columns: 132px minmax(0, 1fr); gap: 24px; padding-block: 17px; }
+.home-page #experience .timeline-row h3 { font-size: 17px; line-height: 1.4; letter-spacing: -.02em; margin: 0 0 5px; }
+.home-page #experience .timeline-row .org { margin: 0; font-size: 12px; line-height: 1.6; }
+.home-page #experience .role-meta { gap: 6px; }
+.home-page #experience .date { font-size: 9px; padding-top: 4px; }
+.home-page #experience .employment-type { padding: 3px 6px; font-size: 9px; }
+.home-page #experience .hover-description p { font-size: 13px; line-height: 1.8; margin-top: 9px; }
+.home-page #publications .section-content > .section-title { padding-bottom: 18px; margin-bottom: 20px; }
+.home-page #publications .publications-title > div { min-width: 0; }
+.home-page #publications .publications-title > a { font-size: 11px; }
+.home-page #publications .pub { grid-template-columns: 36px minmax(0, 1fr) 18px; gap: 16px; padding-block: 16px; }
+.home-page #publications .pub h3 { margin-bottom: 6px; font-size: 15px; line-height: 1.5; }
+.home-page #publications .pub > span:first-child { font-size: 10px; padding-top: 3px; }
+.home-page #publications .pub-meta { margin: 0; font-size: 10px; line-height: 1.65; }
+.home-page #publications .pub > b { font-size: 14px; font-weight: 400; }
+.home-page #publications .pub:hover h3 { color: var(--accent); }
+
+.home-page .contact { padding-block: 64px; }
+.home-page .contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(160px, 220px); align-items: start; gap: clamp(32px, 5vw, 80px); }
+.home-page .contact .kicker { margin: 0 0 20px; font-size: 10px; letter-spacing: .15em; color: var(--chapter-accent); }
+.home-page .contact h2 { max-width: none; margin: 0 0 18px; font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; letter-spacing: -.04em; }
+.home-page .contact-copy { max-width: 460px; margin-bottom: 24px; color: var(--muted); font-size: 14px; line-height: 1.8; text-align: left; hyphens: none; }
+.home-page .contact-email { display: inline-flex; align-items: center; gap: 24px; min-height: 48px; max-width: 100%; padding-block: 8px; border-bottom: 1px solid var(--chapter-accent); font-size: clamp(16px, 1.7vw, 22px); font-weight: 500; line-height: 1.5; }
+.home-page .contact-email > span:first-child { overflow-wrap: anywhere; }
+.home-page .contact-email > span:last-child { color: var(--chapter-accent); transition: transform 180ms ease; }
+.home-page .contact-email:hover > span:last-child { transform: translate(2px, -2px); }
+.home-page .contact-profiles { padding-top: 4px; }
+.home-page .contact-profile-label { margin: 0 0 18px; color: var(--muted); font-size: 9px; letter-spacing: .13em; text-align: left; }
+.home-page .contact-profiles > a { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 46px; padding-block: 12px; border-bottom: 1px solid var(--line); font-size: 12px; }
+.home-page .contact-profiles > a > span:last-child { color: var(--chapter-accent); }
+@media(min-width:1025px) and (max-width:1280px){.home-page #experience .timeline-row{grid-template-columns:110px minmax(0,1fr);gap:20px}}
+@media(max-width:760px){
+  .home-page .hero-summary-role{font-size:16px}
+  .home-page .hero-summary-note{font-size:14px}
+  .home-page #experience,.home-page #publications{padding-block:40px}
+  .home-page #experience .timeline-row{grid-template-columns:1fr;gap:8px;padding-block:15px}
+  .home-page #experience .timeline-row h3{font-size:16px}
+  .home-page #experience .role-meta{flex-direction:row;align-items:center;gap:12px}
+  .home-page #experience .date{padding-top:0}
+  .home-page #experience .experience-group+.experience-group{margin-top:24px;padding-top:22px}
+  .home-page #publications .pub{grid-template-columns:30px minmax(0,1fr) 14px;gap:10px;padding-block:14px}
+  .home-page #publications .pub h3{font-size:14px;line-height:1.5}
+  .home-page #publications .publications-title{gap:14px}
+  .home-page .contact{padding-block:44px}
+  .home-page .contact-grid{grid-template-columns:1fr;gap:32px}
+  .home-page .contact h2{font-size:36px}
+  .home-page .contact-profiles{max-width:460px;width:100%}
+  .home-page .contact-profile-label{margin-bottom:9px}
+}
+
+.home-page #research .research-preview{background:#f4f9fc}
+:root[data-theme=dark] .home-page #research .research-preview{background:#142d3a}

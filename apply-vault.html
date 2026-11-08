@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#FAF7F0">
+  <title>Apply Vault — Private Access</title>
+  <link rel="icon" href="favicon.ico">
+  <script src="theme-init.js?v=20261014-editorial"></script>
+  <link rel="stylesheet" href="apply-vault.css?v=20261021-compact">
+</head>
+<body>
+  <main class="vault-minimal" aria-label="Apply Vault">
+    <form id="verify-form" class="vault-login" novalidate>
+      <div class="vault-field">
+        <label for="verify-email">TAN</label>
+        <input id="verify-email" name="email" type="email" inputmode="email" autocomplete="username" placeholder="Temporary access name" aria-label="Temporary Access Name (TAN)" required>
+      </div>
+      <div class="vault-field">
+        <label for="verify-password">TAP</label>
+        <input id="verify-password" name="password" type="password" autocomplete="current-password" placeholder="Temporary access pass" aria-label="Temporary Access Pass (TAP)" required>
+      </div>
+      <div class="vault-actions">
+        <button type="submit" class="vault-button vault-button--primary" id="verify-btn">Submit <span aria-hidden="true">↗</span></button>
+        <button type="button" class="vault-button vault-button--secondary" id="request-access" aria-expanded="false" aria-controls="request-shell">Request <span aria-hidden="true">+</span></button>
+      </div>
+    </form>
+    <p class="vault-notice" id="vault-status" role="status" aria-live="polite" hidden></p>
+
+    <section class="request-shell" id="request-shell" aria-label="Access request" hidden>
+      <form id="request-form" novalidate>
+        <div class="request-fields" role="group" aria-label="Access request details">
+          <div class="mini-field"><label for="first-name">First name</label><input id="first-name" name="firstName" maxlength="80" autocomplete="given-name" required></div>
+          <div class="mini-field"><label for="last-name">Last name</label><input id="last-name" name="lastName" maxlength="80" autocomplete="family-name" required></div>
+          <div class="mini-field"><label for="mobile">Mobile</label><input id="mobile" name="mobile" type="tel" maxlength="30" autocomplete="tel" required></div>
+          <div class="mini-field"><label for="request-email">Email</label><input id="request-email" name="email" type="email" maxlength="180" autocomplete="email" required></div>
+          <div class="mini-field"><label for="affiliation">Affiliation</label><input id="affiliation" name="affiliation" maxlength="180" required></div>
+          <div class="mini-field mini-field--year"><label for="entry-year">Entry year</label><input id="entry-year" name="entryYear" type="number" inputmode="numeric" min="1950" max="2100" required></div>
+          <div class="mini-field mini-field--reason"><label for="reason">Reason for access</label><textarea id="reason" name="reason" maxlength="1200" rows="1" required></textarea></div>
+        </div>
+        <button type="submit" id="request-btn" class="request-send">Send request <span aria-hidden="true">↗</span></button>
+        <input id="request-website" class="honeypot" name="website" autocomplete="off" tabindex="-1" aria-hidden="true">
+        <p id="request-status" class="request-notice" role="status" aria-live="polite" hidden></p>
+      </form>
+    </section>
+  </main>
+  <script src="access-config.js"></script>
+  <script src="apply-vault.js?v=20261021-compact" defer></script>
+  <script src="screen-protection.js" defer></script>
+</body>
+</html>
